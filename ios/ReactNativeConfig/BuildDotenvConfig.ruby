@@ -2,14 +2,9 @@
 
 require "json"
 
-# pick a custom env file if set
-if File.exists?("/tmp/envfile")
-  custom_env = true
-  file = File.read("/tmp/envfile").strip
-else
-  custom_env = false
-  file = File.join(Dir.pwd, "../../../.env")
-end
+# defaults
+file = ENV['ENVFILE'] || ".env"
+custom_env = false
 
 puts "Reading env from #{file}"
 
@@ -41,9 +36,5 @@ EOF
 # write it so that ReactNativeConfig.m can return it
 path = File.join(ENV["SYMROOT"], "GeneratedDotEnv.m")
 File.open(path, "w") { |f| f.puts template }
-
-if custom_env
-  File.delete("/tmp/envfile")
-end
 
 puts "Wrote to #{path}"
